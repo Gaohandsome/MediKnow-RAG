@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend-syntax:
+    name: 后端语法检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # 完整测试需要 MySQL / Milvus / bge 模型 / 大模型 Key，不适合在 CI 跑；
+      # 这里只保证所有 Python 文件能被编译，防止语法错误与坏 import 路径。
+      - name: compileall
+        run: python -m compileall -q backend scripts tests
+
+  frontend-build:
+    name: 前端构建
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: npm ci
+        run: npm ci
+      - name: npm run build
+        run: npm run build

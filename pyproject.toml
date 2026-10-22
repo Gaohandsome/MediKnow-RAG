@@ -1,0 +1,26 @@
+[project]
+name = "mediknow-rag"
+version = "1.0.0"
+description = "面向院内知识库的 RAG 智能问答系统：FastAPI + Vue 3 + MySQL + Milvus + bge-m3"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "MediKnow-RAG contributors" }]
+keywords = ["rag", "retrieval-augmented-generation", "fastapi", "vue3", "milvus", "bge-m3"]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Framework :: FastAPI",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# 运行依赖见 backend/requirements.txt（含 torch 等大包，用 pip install -r 更直观）
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]
+markers = [
+    "integration: 依赖外部服务（MySQL / Milvus / 大模型）的集成测试",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

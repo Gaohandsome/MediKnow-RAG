@@ -1,0 +1,53 @@
+# ---------------- 密钥与环境 ----------------
+.env
+.env.*
+!.env.example
+
+# ---------------- Python ----------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# ---------------- 运行时产物 ----------------
+logs/
+data/uploads/
+data/test_uploads/
+data/media/
+data/backup/
+# 评测过程产物：只保留用例集（data/eval/ragas_cases*.json）
+data/eval/run_*.jsonl
+data/eval/scores_*.json
+data/eval/report_*.md
+data/eval/dashboard_*.html
+data/eval/retrieval_*.json
+
+# ---------------- 前端 ----------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-error.log*
+
+# ---------------- 模型权重（体积过大，请自行下载） ----------------
+models/
+*.safetensors
+*.bin
+*.onnx
+*.pt
+*.pth
+
+# ---------------- 编辑器与系统 ----------------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp

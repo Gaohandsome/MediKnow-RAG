@@ -1,0 +1,40 @@
+# 后端依赖（Python 3.13）
+# 安装：pip install -r backend/requirements.txt
+
+fastapi==0.146.0
+uvicorn[standard]==0.54.0
+sqlalchemy==2.1.5
+pymysql==1.2.3
+pydantic==2.14.1
+pydantic-settings==2.16.0
+python-multipart==0.0.32
+bcrypt==5.0.0
+PyJWT==2.15.1
+openai==3.35.1
+loguru==0.7.3
+
+# 文档解析
+pypdf==6.21.1
+pdfplumber==0.11.10
+python-pptx==1.0.2
+python-docx==1.2.0
+pillow==13.0.0
+reportlab==5.0.1
+
+# 向量库（与 Milvus 2.4.x 服务端兼容）
+pymilvus==2.5.16
+# pymilvus 2.4/2.5 依赖 pkg_resources 与 marshmallow 3.x
+setuptools<81
+marshmallow<4
+
+# 本地向量化 / 重排模型（CPU 版 torch）
+torch==2.14.1
+transformers==5.20.1
+
+# 测试
+pytest==9.1.1
+pytest-asyncio==1.4.0
+httpx==0.28.1
+
+# 缓存（可选）：未安装时自动降级为进程内缓存
+redis>=5
