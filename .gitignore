@@ -38,7 +38,10 @@ npm-debug.log*
 yarn-error.log*
 
 # ---------------- 模型权重（体积过大，请自行下载） ----------------
-models/
+# 只匹配仓库根目录与 data/ 下的权重目录；不要写成 models/，否则会连
+# backend/app/models/（ORM 模型源码）一起忽略
+/models/
+/data/models/
 *.safetensors
 *.bin
 *.onnx
