@@ -7,6 +7,7 @@
 """
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -22,6 +23,30 @@ REVISE_DATE = "2026 年 10 月"
 DISCLAIMER = "【合成演示数据】本手册由项目脚本生成，仅用于系统演示与测试，不可用于实际诊疗或管理决策。"
 
 
+# 中文字体候选：Windows / macOS / Linux 各取常见路径，也可用 MEDIKNOW_FONT 显式指定。
+# 都找不到时调用方退回 PIL 默认字体（中文会变成方块），不阻断流程。
+_CJK_FONT_CANDIDATES = (
+    os.environ.get("MEDIKNOW_FONT", ""),
+    r"C:\Windows\Fonts\msyh.ttc",
+    r"C:\Windows\Fonts\simhei.ttf",
+    r"C:\Windows\Fonts\simsun.ttc",
+    "/System/Library/Fonts/PingFang.ttc",
+    "/System/Library/Fonts/Supplemental/Songti.ttc",
+    "/Library/Fonts/Arial Unicode.ttf",
+    "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+)
+
+
+def _find_cjk_font() -> str | None:
+    """返回第一个存在的中文字体路径，找不到返回 None。"""
+    for candidate in _CJK_FONT_CANDIDATES:
+        if candidate and Path(candidate).exists():
+            return candidate
+    return None
+
+
 def build_cpr_flow() -> Path:
     """用 PIL 绘制 CPR 急救流程图，供 PDF 内嵌。"""
     from PIL import Image, ImageDraw, ImageFont
@@ -30,11 +55,7 @@ def build_cpr_flow() -> Path:
     image = Image.new("RGB", (width, height), (255, 255, 255))
     draw = ImageDraw.Draw(image)
 
-    font_path = None
-    for candidate in (r"C:\Windows\Fonts\msyh.ttc", r"C:\Windows\Fonts\simhei.ttf", r"C:\Windows\Fonts\simsun.ttc"):
-        if Path(candidate).exists():
-            font_path = candidate
-            break
+    font_path = _find_cjk_font()
     title_font = ImageFont.truetype(font_path, 40) if font_path else ImageFont.load_default()
     body_font = ImageFont.truetype(font_path, 26) if font_path else ImageFont.load_default()
     small_font = ImageFont.truetype(font_path, 22) if font_path else ImageFont.load_default()

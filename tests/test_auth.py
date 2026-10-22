@@ -18,7 +18,7 @@ def test_captcha_returns_base64_image(client: TestClient):
 
 def test_register_and_login_success(client: TestClient):
     username = f"u{uuid.uuid4().hex[:8]}"
-    password = "scrubbed-literal"
+    password = f"T{uuid.uuid4().hex[:10]}"
 
     captcha_id, code = fetch_captcha(client)
     response = client.post(

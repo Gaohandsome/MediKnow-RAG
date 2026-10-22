@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -129,12 +130,20 @@ INFECTION_SLIDES = [
 
 
 def _font_path() -> str | None:
+    """返回第一个存在的中文字体路径（跨平台），找不到返回 None。"""
     for candidate in (
+        os.environ.get("MEDIKNOW_FONT", ""),
         r"C:\Windows\Fonts\msyh.ttc",
         r"C:\Windows\Fonts\simhei.ttf",
         r"C:\Windows\Fonts\simsun.ttc",
+        "/System/Library/Fonts/PingFang.ttc",
+        "/System/Library/Fonts/Supplemental/Songti.ttc",
+        "/Library/Fonts/Arial Unicode.ttf",
+        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
     ):
-        if Path(candidate).exists():
+        if candidate and Path(candidate).exists():
             return candidate
     return None
 

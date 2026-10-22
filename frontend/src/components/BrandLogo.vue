@@ -17,7 +17,7 @@ defineProps({
         <path d="M14.6 10.6h2.8v1.9h1.9v2.8h-1.9v1.9h-2.8v-1.9h-1.9v-2.8h1.9z" fill="#6366f1" />
       </svg>
     </div>
-    <span v-if="showText" class="name">医知<span class="dot">·</span><small>院内知识问答</small></span>
+    <span v-if="showText" class="name">MediKnow<span class="dot">·</span><small>院内知识问答</small></span>
   </div>
 </template>
 

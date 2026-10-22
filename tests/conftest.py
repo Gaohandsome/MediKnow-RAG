@@ -30,10 +30,21 @@ from app.services.vector_store import get_vector_store  # noqa: E402
 API = "/api/v1"
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def prepare_environment():
-    """初始化测试库，结束后清理测试集合与上传目录。"""
-    init_db()
+    """初始化测试库，结束后清理测试集合与上传目录。
+
+    注意：本夹具不加 ``autouse``。只跑单元测试（如缓存/大模型降级）时
+    不需要数据库，不应因为本机没起 MySQL 就整片报红。需要数据库的用例
+    通过 ``client`` / ``db`` 间接依赖本夹具，数据库不可用时它们会被 skip。
+    """
+    try:
+        init_db()
+    except Exception as exc:  # noqa: BLE001
+        pytest.skip(
+            f"测试库不可用：{type(exc).__name__}: {str(exc).splitlines()[0][:120]}"
+            " —— 请先启动 MySQL 并按 .env.example 配置好 .env",
+        )
     yield
     # 清理 Milvus 测试集合
     try:
@@ -57,7 +68,7 @@ def client(prepare_environment):  # noqa: ARG001
 
 
 @pytest.fixture()
-def db():
+def db(prepare_environment):  # noqa: ARG001
     session = SessionLocal()
     try:
         yield session
@@ -90,7 +101,7 @@ def second_user(client: TestClient) -> dict:
 def register_and_login(client: TestClient) -> dict:
     """注册并登录一个随机用户。"""
     username = f"t{uuid.uuid4().hex[:10]}"
-    password = "scrubbed-literal"
+    password = f"T{uuid.uuid4().hex[:10]}"
     captcha_id, code = fetch_captcha(client)
     register = client.post(
         f"{API}/auth/register",

@@ -6,9 +6,9 @@ from app.core.config import Settings, settings
 
 
 def test_dsn_built_from_parts():
-    s = Settings(_env_file=None, redis_host="10.0.0.9", redis_port=6380,
+    s = Settings(_env_file=None, redis_host="192.0.2.10", redis_port=6380,
                  redis_password="pwd", redis_db=2, redis_url="")
-    assert s.redis_dsn == "redis://:pwd@10.0.0.9:6380/2"
+    assert s.redis_dsn == "redis://:pwd@192.0.2.10:6380/2"
 
 
 def test_dsn_without_password():
@@ -19,7 +19,7 @@ def test_dsn_without_password():
 
 def test_explicit_url_wins():
     s = Settings(_env_file=None, redis_url="redis://:x@example.com:6379/5",
-                 redis_host="ignored", redis_password="ignored")
+                 redis_host="ignored", redis_password="-")
     assert s.redis_dsn == "redis://:x@example.com:6379/5"
 
 
