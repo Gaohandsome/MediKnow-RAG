@@ -57,7 +57,7 @@ class MilvusVectorStore:
     def collection_name(self, knowledge_base_id: int | None = None) -> str:
         """所有知识库共用同一个 Milvus 集合，靠 kb_id 字段隔离。
 
-        `MILVUS_COLLECTION_PREFIX` 即为集合名本身（如 rag_1019），
+        `MILVUS_COLLECTION_PREFIX` 即为集合名本身（如 mediknow），
         不再拼接知识库 ID，避免每个知识库生成一个集合。
         """
         return settings.milvus_collection_prefix

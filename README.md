@@ -353,7 +353,7 @@ python scripts/eval/ragas_report_html.py --scores data/eval/scores_quick.json
 # 单元测试（不依赖 MySQL / Milvus / 大模型）
 python -m pytest tests/test_chunking.py -v
 
-# 全量（123 项，需要 MySQL + Milvus，测试库 subjects_kg_test 与集合前缀 test_kb_ 会自动清理）
+# 全量（123 项，需要 MySQL + Milvus，测试库 mediknow_test 与集合前缀 test_kb_ 会自动清理）
 python -m pytest -v
 
 # 只跑集成测试
