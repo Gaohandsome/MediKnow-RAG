@@ -8,7 +8,7 @@ PLACEHOLDERS = ("change-me", "please-change-me", "  ", "CHANGE-ME")
 
 
 def _settings(**kwargs) -> Settings:
-    base = {"jwt_secret": "9f2c1b7e4a6d8c0e5b3a1f7d2c8e4b6a", "llm_api_key": "sk-local-test"}
+    base = {"jwt_secret": "unit-test-only-secret", "llm_api_key": "local-test-key"}
     base.update(kwargs)
     return Settings(_env_file=None, **base)
 

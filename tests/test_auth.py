@@ -48,13 +48,14 @@ def test_register_and_login_success(client: TestClient):
 
 
 def test_register_rejects_password_mismatch(client: TestClient):
+    password = f"U{uuid.uuid4().hex[:10]}"
     captcha_id, code = fetch_captcha(client)
     response = client.post(
         f"{API}/auth/register",
         json={
             "username": f"u{uuid.uuid4().hex[:8]}",
-            "password": "scrubbed-literal",
-            "confirm_password": "scrubbed-literal7",
+            "password": password,
+            "confirm_password": f"{password}x",
             "captcha_id": captcha_id,
             "captcha_code": code,
         },
@@ -64,13 +65,14 @@ def test_register_rejects_password_mismatch(client: TestClient):
 
 
 def test_register_rejects_duplicate_username(client: TestClient, new_user: dict):
+    password = f"U{uuid.uuid4().hex[:10]}"
     captcha_id, code = fetch_captcha(client)
     response = client.post(
         f"{API}/auth/register",
         json={
             "username": new_user["username"],
-            "password": "scrubbed-literal",
-            "confirm_password": "scrubbed-literal",
+            "password": password,
+            "confirm_password": password,
             "captcha_id": captcha_id,
             "captcha_code": code,
         },
@@ -99,7 +101,7 @@ def test_login_rejects_wrong_password(client: TestClient, new_user: dict):
         f"{API}/auth/login",
         json={
             "username": new_user["username"],
-            "password": "wrong-password",
+            "password": f"W{uuid.uuid4().hex[:10]}",
             "captcha_id": captcha_id,
             "captcha_code": code,
         },
@@ -110,12 +112,13 @@ def test_login_rejects_wrong_password(client: TestClient, new_user: dict):
 def test_captcha_cannot_be_reused(client: TestClient):
     captcha_id, code = fetch_captcha(client)
     username = f"u{uuid.uuid4().hex[:8]}"
+    password = f"U{uuid.uuid4().hex[:10]}"
     first = client.post(
         f"{API}/auth/register",
         json={
             "username": username,
-            "password": "scrubbed-literal",
-            "confirm_password": "scrubbed-literal",
+            "password": password,
+            "confirm_password": password,
             "captcha_id": captcha_id,
             "captcha_code": code,
         },
@@ -124,7 +127,7 @@ def test_captcha_cannot_be_reused(client: TestClient):
 
     second = client.post(
         f"{API}/auth/login",
-        json={"username": username, "password": "scrubbed-literal", "captcha_id": captcha_id, "captcha_code": code},
+        json={"username": username, "password": password, "captcha_id": captcha_id, "captcha_code": code},
     )
     assert second.status_code == 400
 

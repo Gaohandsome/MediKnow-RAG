@@ -10,6 +10,7 @@ import json
 import re
 import sys
 import time
+import uuid
 from pathlib import Path
 
 import httpx
@@ -42,6 +43,8 @@ def get_captcha(client: httpx.Client) -> tuple[str, str]:
 def main() -> int:
     client = httpx.Client(timeout=300)
     username = f"demo{int(time.time()) % 100000}"
+    # 演示账号口令每次随机生成，不写死在脚本里
+    password = f"Smoke{uuid.uuid4().hex[:10]}"
 
     # 1. 注册 + 登录
     captcha_id, code = get_captcha(client)
@@ -49,8 +52,8 @@ def main() -> int:
         f"{BASE}/auth/register",
         json={
             "username": username,
-            "password": "demo123456",
-            "confirm_password": "demo123456",
+            "password": password,
+            "confirm_password": password,
             "captcha_id": captcha_id,
             "captcha_code": code,
         },
@@ -60,7 +63,7 @@ def main() -> int:
     captcha_id, code = get_captcha(client)
     login = client.post(
         f"{BASE}/auth/login",
-        json={"username": username, "password": "demo123456", "captcha_id": captcha_id, "captcha_code": code},
+        json={"username": username, "password": password, "captcha_id": captcha_id, "captcha_code": code},
     )
     token = login.json()["data"]["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
