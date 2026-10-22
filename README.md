@@ -218,6 +218,9 @@ python scripts/data/generate_training_handbook.py     # 生成 7 页扫描版培
 
 > **密钥安全**：`.env` 已在 `.gitignore` 中；`JWT_SECRET` 上线前请换成随机串：
 > `python -c "import secrets;print(secrets.token_urlsafe(48))"`。
+>
+> 服务启动时会做一次配置自检：`JWT_SECRET` / `LLM_API_KEY` 仍为空或示例值时，
+> `APP_ENV=dev` 下打印告警，其它环境直接拒绝启动，避免带着开源代码里的默认密钥上线。
 
 ---
 

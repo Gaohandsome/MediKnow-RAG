@@ -171,6 +171,21 @@ class Settings(BaseSettings):
     max_upload_mb: int = 50
 
     @property
+    def insecure_defaults(self) -> list[str]:
+        """仍在使用示例值的敏感配置项，供启动自检。
+
+        这些值写在开源代码里，任何人都能看到；忘记配置就等于用公开密钥签名
+        token。开发环境只告警，其它环境直接拒绝启动。
+        """
+        placeholders = {"", "change-me", "please-change-me", "your-secret-key", "changeme"}
+        issues = []
+        if self.jwt_secret.strip().lower() in placeholders:
+            issues.append("JWT_SECRET")
+        if not self.llm_api_key.strip():
+            issues.append("LLM_API_KEY")
+        return issues
+
+    @property
     def database_url(self) -> str:
         return (
             f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}"

@@ -20,6 +20,13 @@ from app.schemas.common import ok
 async def lifespan(_: FastAPI):
     setup_logging()
     logger.info(f"启动 {settings.app_name}（env={settings.app_env}）")
+    issues = settings.insecure_defaults
+    if issues:
+        message = f"配置自检未通过：{'、'.join(issues)} 仍为空或示例值，请参照 .env.example 填写"
+        if settings.app_env == "dev":
+            logger.warning(message)
+        else:
+            raise RuntimeError(message)
     try:
         init_db()
     except Exception as exc:  # noqa: BLE001
